@@ -9,6 +9,40 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <StackPanel Margin="39,38,1084,552">
+            <TextBlock TextWrapping="Wrap" Text="Entities" FontSize="48" FontFamily="Californian FB"/>
+            <TextBlock TextWrapping="Wrap" Text="Enter Entity Name:" FontSize="20"/>
+            <TextBox x:Name="entityName" TextWrapping="Wrap" Text="" FontSize="18" FontFamily="Cambria" PlaceholderText="Name" Width="791" RenderTransformOrigin="-0.097,0.571"/>
+            <Button x:Name="saveEntity" Content="Save" Width="436" FontSize="20" Click="saveEntity_Click"/>
+            <TextBlock x:Name="entitiesPreview" TextWrapping="Wrap" Text="" FontSize="18"/>
+        </StackPanel>
+        <StackPanel Margin="39,540,1084,50">
+            <TextBlock TextWrapping="Wrap" Text="Attributes" FontSize="48" FontFamily="Californian FB"/>
+            <TextBlock TextWrapping="Wrap" Text="Enter Attribute Name:" FontSize="20"/>
+            <TextBox x:Name="attributeName" TextWrapping="Wrap" Text="" FontSize="18" FontFamily="Cambria" PlaceholderText="Name"/>
+            <TextBlock TextWrapping="Wrap" Text="Select Entity:" FontSize="20"/>
+            <ComboBox x:Name="attribute_entitySelector" Width="789" PlaceholderText="entity list"/>
+            <Button x:Name="saveAttribute" Content="Save" Width="450" FontSize="20" Click="saveAttribute_Click"/>
+            <TextBlock x:Name="attributesPreview" TextWrapping="Wrap" Text="" FontSize="18"/>
+        </StackPanel>
+        <StackPanel Margin="960,38,163,50">
+            <TextBlock TextWrapping="Wrap" Text="Relationships" FontSize="48" FontFamily="Californian FB"/>
+            <TextBlock TextWrapping="Wrap" Text="Enter Relationship Name:" FontSize="20"/>
+            <TextBox x:Name="relationshipName" TextWrapping="Wrap" Text="" FontSize="18" FontFamily="Cambria" PlaceholderText="Name"/>
+            <TextBlock TextWrapping="Wrap" Text="Select Entity 1 and Relationship:" FontSize="20"/>
+            <ComboBox x:Name="relationship_entity1" Width="789" PlaceholderText="entity list" Height="38"/>
+            <ComboBox x:Name="relationship_entity1type" Width="789" PlaceholderText="type" Height="38">
+                <ComboBoxItem Content="One"/>
+                <ComboBoxItem Content="Many"/>
+            </ComboBox>
+            <TextBlock TextWrapping="Wrap" Text="Select Entity 2 and Relationship:" FontSize="20"/>
+            <ComboBox x:Name="relationship_entity2" Width="789" PlaceholderText="entity list" Height="38"/>
+            <ComboBox x:Name="relationship_entity2Type" Width="789" PlaceholderText="type" Height="38">
+                <ComboBoxItem Content="One"/>
+                <ComboBoxItem Content="Many"/>
+            </ComboBox>
+            <Button x:Name="saveRelationship" Content="Save" Width="450" FontSize="20" Click="saveAttribute1_Click"/>
+            <TextBlock x:Name="attributesPreview1" TextWrapping="Wrap" Text="" FontSize="18"/>
+        </StackPanel>
     </Grid>
 </Page>
