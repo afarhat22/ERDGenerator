@@ -25,15 +25,18 @@ namespace ERDGenerator
     public sealed partial class MainPage : Page
     {
 
-        List<Relationship> relationships = new List<Relationship>();
-        List<Attribute> attributes = new List<Attribute>();
-        List<Entity> entities = new List<Entity>();
 
-        
-           
+
+        List<Entity> entities = Application.Current.Resources["Entities"] as List<Entity>;
+        List<Attribute> attributes = Application.Current.Resources["Attributes"] as List<Attribute>;
+        List<Relationship> relationships = Application.Current.Resources["Relationships"] as List<Relationship>;
+
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            
         }
 
         private void saveEntity_Click(object sender, RoutedEventArgs e)
@@ -73,6 +76,11 @@ namespace ERDGenerator
                 relationshipName.Text = String.Empty;
 
             }
+        }
+
+        private void generateErd_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ERDPage));
         }
     }
 }

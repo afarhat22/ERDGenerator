@@ -30,6 +30,8 @@ namespace ERDGenerator
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            
         }
 
         /// <summary>
@@ -63,6 +65,9 @@ namespace ERDGenerator
             {
                 if (rootFrame.Content == null)
                 {
+                    Application.Current.Resources["Entities"] = new List<Entity>();
+                    Application.Current.Resources["Attributes"] = new List<Attribute>();
+                    Application.Current.Resources["Relationships"] = new List<Relationship>();
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
