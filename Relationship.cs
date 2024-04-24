@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ERDGenerator
 {
-    internal class Relationship
+    internal class Relationship : IDiagramBox
     {
         private static int _nextId = 1;
+        public int elementID { get; } = 2;
 
         public int ID { get; private set; }
         public string name { get; set; }
@@ -16,6 +17,8 @@ namespace ERDGenerator
         public Entity entity2 { get; set; }
         public relationshipType e1Type { get; set; }
         public relationshipType e2Type { get; set; }
+
+        
 
         public enum relationshipType
         {

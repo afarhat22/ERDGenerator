@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ERDGenerator
 {
-    internal class Attribute
+    internal class Attribute : IDiagramBox
     {
         private static int _nextId = 1;
+        public int elementID { get; } = 3;
 
         public int ID { get; private set; }
         public string name { get; private set; }

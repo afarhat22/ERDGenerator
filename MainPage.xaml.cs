@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,16 +28,21 @@ namespace ERDGenerator
 
 
 
-        List<Entity> entities = Application.Current.Resources["Entities"] as List<Entity>;
-        List<Attribute> attributes = Application.Current.Resources["Attributes"] as List<Attribute>;
-        List<Relationship> relationships = Application.Current.Resources["Relationships"] as List<Relationship>;
+        List<Relationship> relationships;
+        List<Entity> entities;
+        List<Attribute> attributes;
 
+        AllDiagramBoxes boxes;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            
+            relationships = new List<Relationship>();
+            entities = new List<Entity>();
+            attributes = new List<Attribute>();
+
+             
         }
 
         private void saveEntity_Click(object sender, RoutedEventArgs e)
@@ -78,9 +84,18 @@ namespace ERDGenerator
             }
         }
 
+        
         private void generateErd_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ERDPage));
+            boxes = new AllDiagramBoxes
+            {
+                entities = entities,
+                relationships = relationships,
+                attributes = attributes
+            };
+
+            
+            this.Frame.Navigate(typeof(ERDPage), boxes);
         }
     }
 }
