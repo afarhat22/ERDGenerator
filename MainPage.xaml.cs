@@ -100,8 +100,8 @@ namespace ERDGenerator
                         relationship_entity2Type.SelectedIndex
                     );
                     relationships.Add(newRelationship);
-                    relationshipsPreview.Text += $"{entity1.name} {((relationshipType)relationship_entity1type.SelectedIndex).ToString()} - " +
-                                                 $"{((relationshipType)relationship_entity2Type.SelectedIndex).ToString()} {entity2.name} " +
+                    relationshipsPreview.Text += $"{entity1.name} {((Relationship.relationshipType)relationship_entity1type.SelectedIndex).ToString()} - " +
+                                                 $"{((Relationship.relationshipType)relationship_entity2Type.SelectedIndex).ToString()} {entity2.name} " +
                                                  $"{newRelationship.name}{Environment.NewLine}"; // Update your relationships preview text block
                                                                                                  // Reset the UI elements
                     relationshipName.Text = string.Empty;
