@@ -41,8 +41,8 @@
                 <ComboBoxItem Content="One"/>
                 <ComboBoxItem Content="Many"/>
             </ComboBox>
-            <Button x:Name="saveRelationship" Content="Save" Width="450" FontSize="20" Click="saveAttribute1_Click"/>
-            <TextBlock x:Name="attributesPreview1" TextWrapping="Wrap" Text="" FontSize="18"/>
+            <Button x:Name="saveRelationship" Content="Save" Width="450" FontSize="20" Click="saveRelationship_Click"/>
+            <TextBlock x:Name="relationshipsPreview" TextWrapping="Wrap" Text="" FontSize="18"/>
         </StackPanel>
         <Button x:Name="generateErd" Content="Generate ERD" Margin="1786,38,0,0" VerticalAlignment="Top" Height="74" Width="116" Click="generateErd_Click"/>
     </Grid>
