@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,46 +42,84 @@ namespace ERDGenerator
 
         private void saveEntity_Click(object sender, RoutedEventArgs e)
         {
-            if (entityName.Text != String.Empty)
-            {
-                entities.Add(new Entity(entityName.Text));
-                attribute_entitySelector.Items.Add(entityName.Text);
-                relationship_entity1.Items.Add(entityName.Text);
-                relationship_entity2.Items.Add(entityName.Text);
-                entityName.Text = String.Empty;
-            }
-            
-        }
+               if (!string.IsNullOrWhiteSpace(entityName.Text))
+               {
+                    Entity newEntity = new Entity(entityName.Text);
+                    entities.Add(newEntity);
+                    entitiesPreview.Text += newEntity.name + Environment.NewLine; // Update your entities preview text block
+                    attribute_entitySelector.Items.Add(newEntity.name);
+                    relationship_entity1.Items.Add(newEntity.name);
+                    relationship_entity2.Items.Add(newEntity.name);
+                    entityName.Text = string.Empty; // Clear the input field
+               }
+
+          }
 
         private void saveAttribute_Click(object sender, RoutedEventArgs e)
         {
-            if (attributeName.Text != String.Empty)
-            {
-                attributes.Add(new Attribute(attributeName.Text));
-                entities.ElementAt(attribute_entitySelector.SelectedIndex).AddAttribute(attributes.Last());
-                attributeName.Text = String.Empty;
-                attribute_entitySelector.SelectedIndex = -1;
-            }
-            
-        }
+               if (!string.IsNullOrWhiteSpace(attributeName.Text) && attribute_entitySelector.SelectedIndex >= 0)
+               {
+                    Entity selectedEntity = entities.ElementAt(attribute_entitySelector.SelectedIndex);
+                    Attribute newAttribute = new Attribute(attributeName.Text);
+                    selectedEntity.AddAttribute(newAttribute);
+                    attributes.Add(newAttribute);
+                    attributesPreview.Text += selectedEntity.name + "." + newAttribute.name + Environment.NewLine; // Update your attributes preview text block
+                    attributeName.Text = string.Empty; // Clear the input field
+                    attribute_entitySelector.SelectedIndex = -1; // Reset the combo box
+               }
 
-        private void saveAttribute1_Click(object sender, RoutedEventArgs e)
+          }
+
+        private void saveRelationship_Click(object sender, RoutedEventArgs e)
         {
-            if (relationshipName.Text != String.Empty)
-            {
-                relationships.Add(new Relationship(relationshipName.Text, entities.ElementAt(relationship_entity1.SelectedIndex), entities.ElementAt(relationship_entity2.SelectedIndex), relationship_entity1type.SelectedIndex, relationship_entity2Type.SelectedIndex));
-                relationship_entity1type.SelectedIndex = -1;
-                relationship_entity2Type.SelectedIndex = -1;
-                relationship_entity1.SelectedIndex = -1;
-                relationship_entity2.SelectedIndex = -1;
-                relationshipName.Text = String.Empty;
+               if (!string.IsNullOrWhiteSpace(relationshipName.Text) &&
+         relationship_entity1.SelectedIndex >= 0 &&
+         relationship_entity2.SelectedIndex >= 0)
+               {
+                    Entity entity1 = entities.ElementAt(relationship_entity1.SelectedIndex);
+                    Entity entity2 = entities.ElementAt(relationship_entity2.SelectedIndex);
+                    Relationship newRelationship = new Relationship(
+                        relationshipName.Text,
+                        entity1,
+                        entity2,
+                        relationship_entity1type.SelectedIndex,
+                        relationship_entity2Type.SelectedIndex
+                    );
+                    relationships.Add(newRelationship);
+                    relationshipsPreview.Text += $"{entity1.name} {((relationshipType)relationship_entity1type.SelectedIndex).ToString()} - " +
+                                                 $"{((relationshipType)relationship_entity2Type.SelectedIndex).ToString()} {entity2.name} " +
+                                                 $"{newRelationship.name}{Environment.NewLine}"; // Update your relationships preview text block
+                                                                                                 // Reset the UI elements
+                    relationshipName.Text = string.Empty;
+                    relationship_entity1type.SelectedIndex = -1;
+                    relationship_entity2Type.SelectedIndex = -1;
+                    relationship_entity1.SelectedIndex = -1;
+                    relationship_entity2.SelectedIndex = -1;
+               }
+          }
 
-            }
-        }
+          private void generateErd_Click(object sender, RoutedEventArgs e)
+          {
+               // Serialize your lists to JSON strings.
+               var entitiesJson = JsonConvert.SerializeObject(entities);
+               var attributesJson = JsonConvert.SerializeObject(attributes);
+               var relationshipsJson = JsonConvert.SerializeObject(relationships);
 
-        private void generateErd_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(ERDPage));
-        }
-    }
+               // Create an anonymous object with all the JSON strings
+               var navigationData = new
+               {
+                    Entities = entitiesJson,
+                    Attributes = attributesJson,
+                    Relationships = relationshipsJson
+               };
+
+               // Serialize the entire anonymous object to a JSON string
+               var navigationDataJson = JsonConvert.SerializeObject(navigationData);
+
+               // Navigate to ERDPage and pass the serialized JSON string as the parameter
+               Frame.Navigate(typeof(ERDPage), navigationDataJson);
+          }
+
+
+     }
 }
