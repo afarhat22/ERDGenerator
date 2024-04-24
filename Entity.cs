@@ -14,6 +14,9 @@ namespace ERDGenerator
         public String name {  get; set; }
         public List<Attribute> Attributes { get; set; }
 
+        public int X { get; set; }
+        public int Y { get; set; }
+
         public Entity(String n)
         {
             ID = _nextId++;
