@@ -110,7 +110,8 @@ namespace ERDGenerator
                 int entity2YCoordinate = relationship.entity2.Y + 25;
 
                 AddRelationship(relationship.name, relationshipX, relationshipY,
-                    entity1XCoordinate, entity1YCoordinate, entity2XCoordinate, entity2YCoordinate);
+                    entity1XCoordinate, entity1YCoordinate, entity2XCoordinate, entity2YCoordinate,
+                    relationship.e1Type, relationship.e2Type);
 
                 relationshipY += 150;
 
@@ -188,7 +189,8 @@ namespace ERDGenerator
 
         private void AddRelationship(String name, int x, int y, 
             int line1x1, int line1y1, 
-            int line2x2, int line2y2)
+            int line2x2, int line2y2,
+            Relationship.relationshipType type1, Relationship.relationshipType type2)
         {
             //create rhombus
             Polygon polygon = new Polygon
@@ -222,6 +224,16 @@ namespace ERDGenerator
             Canvas.SetLeft(text, x - 45);
             Canvas.SetTop(text, y + 15);
             DrawingCanvas.Children.Add(text);
+            TextBlock typeText = new TextBlock
+            {
+                Text = $"{type1} to {type2}",
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
+            };
+            Canvas.SetLeft(typeText, x + 150);
+            Canvas.SetTop(typeText, y);
+            DrawingCanvas.Children.Add(typeText);
 
             int line_startX = x - 75;
             int line_startY = y + 25;
