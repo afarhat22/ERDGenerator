@@ -47,7 +47,7 @@ namespace ERDGenerator
         {
             base.OnNavigatedTo(e);
             AllDiagramBoxes boxes = e.Parameter as AllDiagramBoxes;
-            if (boxes != null)
+            if (boxes != null && boxes.attributes != null && boxes.relationships != null && boxes.entities != null)
             {
                 foreach (Entity entities in boxes.entities)
                 {
