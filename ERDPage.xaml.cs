@@ -125,7 +125,7 @@ namespace ERDGenerator
             {
                 X1 = x + 75,
                 Y1 = y + 25,
-                X2 = entity.X + 75,
+                X2 = entity.X,
                 Y2 = entity.Y + 25,
                 Stroke = new SolidColorBrush(Colors.White),
                 StrokeThickness = 2,
