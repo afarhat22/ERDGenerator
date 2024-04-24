@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +14,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using static ERDGenerator.Relationship;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -27,16 +25,21 @@ namespace ERDGenerator
     public sealed partial class MainPage : Page
     {
 
+        List<Entity> entities;
+        List<Relationship> relationships;
+        List<Attribute> attributes;
 
-
-        List<Entity> entities = Application.Current.Resources["Entities"] as List<Entity>;
-        List<Attribute> attributes = Application.Current.Resources["Attributes"] as List<Attribute>;
-        List<Relationship> relationships = Application.Current.Resources["Relationships"] as List<Relationship>;
+        AllDiagramBoxes boxes;
+        
 
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            entities = new List<Entity>();
+            relationships = new List<Relationship>();
+            attributes = new List<Attribute>();
 
             
         }
@@ -53,8 +56,12 @@ namespace ERDGenerator
                     relationship_entity2.Items.Add(newEntity.name);
                     entityName.Text = string.Empty; // Clear the input field
                }
+            else
+            {
+                _ = ShowDialog();
+            }
 
-          }
+        }
 
         private void saveAttribute_Click(object sender, RoutedEventArgs e)
         {
@@ -68,14 +75,20 @@ namespace ERDGenerator
                     attributeName.Text = string.Empty; // Clear the input field
                     attribute_entitySelector.SelectedIndex = -1; // Reset the combo box
                }
+            else
+            {
+                _ = ShowDialog();
+            }
 
-          }
+        }
 
         private void saveRelationship_Click(object sender, RoutedEventArgs e)
         {
                if (!string.IsNullOrWhiteSpace(relationshipName.Text) &&
-         relationship_entity1.SelectedIndex >= 0 &&
-         relationship_entity2.SelectedIndex >= 0)
+                relationship_entity1.SelectedIndex >= 0 &&
+                relationship_entity2.SelectedIndex >= 0 &&
+                relationship_entity1type.SelectedIndex >= 0 &&
+                relationship_entity2Type.SelectedIndex >= 0) 
                {
                     Entity entity1 = entities.ElementAt(relationship_entity1.SelectedIndex);
                     Entity entity2 = entities.ElementAt(relationship_entity2.SelectedIndex);
@@ -97,7 +110,11 @@ namespace ERDGenerator
                     relationship_entity1.SelectedIndex = -1;
                     relationship_entity2.SelectedIndex = -1;
                }
-          }
+            else
+            {
+                _ = ShowDialog();
+            }
+        }
 
         
         private void generateErd_Click(object sender, RoutedEventArgs e)
