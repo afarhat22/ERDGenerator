@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace ERDGenerator
 {
-    internal class Entity
+    internal class Entity : IDiagramBox
     {
         private static int _nextId = 1;
 
         public int ID { get; private set; }
+        public int elementID { get; } = 1;
         public String name {  get; set; }
         public List<Attribute> Attributes { get; set; }
 
@@ -27,6 +28,11 @@ namespace ERDGenerator
         public void AddAttribute(Attribute attribute)
         {
             Attributes.Add(attribute);
+        }
+
+        public List<Attribute> GetAttributes()
+        {
+            return Attributes;
         }
 
     }

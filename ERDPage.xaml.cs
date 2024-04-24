@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.UI.ViewManagement.Core;
+using System.ComponentModel.DataAnnotations;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,25 +28,60 @@ namespace ERDGenerator
     {
         
 
-        List<Entity> entities = Application.Current.Resources["Entities"] as List<Entity>;
-        List<Attribute> attributes = Application.Current.Resources["Attributes"] as List<Attribute>;
-        List<Relationship> relationships = Application.Current.Resources["Relationships"] as List<Relationship>;
+        List<Entity > entities;
+        List<Relationship> relationships;
+        List<Attribute> attributes;
 
         
         public ERDPage()
         {
             this.InitializeComponent();
+            this.entities = new List<Entity>();
+            this.relationships = new List<Relationship>();
+            this.attributes = new List<Attribute>();
             
-            DrawElements();
+            
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            AllDiagramBoxes boxes = e.Parameter as AllDiagramBoxes;
+            if (boxes != null)
+            {
+                foreach (Entity entities in boxes.entities)
+                {
+                    this.entities.Add(entities);
+                }
+
+                foreach (Relationship relationship in boxes.relationships)
+                {
+                    this.relationships.Add(relationship);
+                }
+
+                foreach(Attribute attribute in boxes.attributes)
+                {
+                    this.attributes.Add(attribute);
+                }
+            }
+            else
+            {
+                throw new InvalidDataException("boxes is null");
+            }
+
+            DrawElements();
+
+        }
         public void DrawElements()
         {
             int entityX = 500;
-            int entityY = 50;
+            int entityY = 75;
 
-            int relationshipX = 800;
-            int relationshipY = 50;
+            int relationshipX = 1000;
+            int relationshipY = 100;
+
+            int attributeX = 200;
+            int attributeY = 25;
 
             foreach (Entity entity in entities)
             {
@@ -57,13 +93,72 @@ namespace ERDGenerator
 
                 //Updates next entities location
                 entityY += 150;
+
+                foreach (Attribute attribute in entity.GetAttributes())
+                { 
+                    AddAttribute(attributeX, attributeY, attribute.name, entity);
+                    attributeY += 150;
+                }
             }
 
             foreach (Relationship relationship in relationships)
             {
-                //int entity1 = entities.FindIndex(relationship.entity1);
+                int entity1XCoordinate = relationship.entity1.X + 150;
+                int entity1YCoordinate = relationship.entity1.Y + 25;
+
+                int entity2XCoordinate = relationship.entity2.X + 150;
+                int entity2YCoordinate = relationship.entity2.Y + 25;
+
+                AddRelationship(relationship.name, relationshipX, relationshipY,
+                    entity1XCoordinate, entity1YCoordinate, entity2XCoordinate, entity2YCoordinate);
+
+                relationshipY += 150;
 
             }
+
+            
+        }
+
+        private void AddAttribute(int x, int y,  string name, Entity entity)
+        {
+            Line line = new Line
+            {
+                X1 = x + 75,
+                Y1 = y + 25,
+                X2 = entity.X + 75,
+                Y2 = entity.Y + 25,
+                Stroke = new SolidColorBrush(Colors.White),
+                StrokeThickness = 2,
+            };
+            DrawingCanvas.Children.Add(line);
+            Ellipse circle = new Ellipse()
+            {
+                Width = 150,
+                Height = 50,
+                Stroke = new SolidColorBrush(Colors.Black),
+                Fill = new SolidColorBrush(Colors.LightGray)
+            };
+
+            DrawingCanvas.Children.Add(circle);
+            Canvas.SetLeft(circle, x);
+            Canvas.SetTop(circle, y);
+
+            TextBlock text = new TextBlock
+            {
+                Text = name,
+                Foreground = new SolidColorBrush(Colors.Black),
+                HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
+            };
+            Canvas.SetLeft(text, x + 10);
+            Canvas.SetTop(text, y + 15);
+            DrawingCanvas.Children.Add(text);
+
+            
+
+
+
+
         }
         private void AddEntity(double x, double y, string name)
         {
@@ -93,10 +188,9 @@ namespace ERDGenerator
 
         private void AddRelationship(String name, int x, int y, 
             int line1x1, int line1y1, 
-            int line1x2, int line1y2, 
-            int line2x1, int line2y1, 
             int line2x2, int line2y2)
         {
+            //create rhombus
             Polygon polygon = new Polygon
             {
                 Stroke = new SolidColorBrush(Colors.Black),
@@ -104,16 +198,19 @@ namespace ERDGenerator
 
             };
 
+            //points for rhombus
             PointCollection points = new PointCollection
             {
                 new Point(x, y),    //top
-                new Point(x + 50, y + 75), //right
-                new Point(x, y + 150),   //bottom
-                new Point(x - 50, y + 75)   //left
+                new Point(x + 75, y + 25), //right
+                new Point(x, y + 50),   //bottom
+                new Point(x - 75, y + 25)   //left
             };
-
+            //draw it
             polygon.Points = points;
             DrawingCanvas.Children.Add(polygon);
+
+            //create text for in rhombus
             TextBlock text = new TextBlock
             {
                 Text = name,
@@ -121,9 +218,38 @@ namespace ERDGenerator
                 HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                 VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
             };
+            //align and draw it
             Canvas.SetLeft(text, x - 45);
             Canvas.SetTop(text, y + 15);
             DrawingCanvas.Children.Add(text);
+
+            int line_startX = x - 75;
+            int line_startY = y + 25;
+
+            Line line1 = new Line
+            {
+                X1 = line_startX,
+                Y1 = line_startY,
+                X2 = line1x1,
+                Y2 = line1y1,
+                Stroke = new SolidColorBrush(Colors.White),
+                StrokeThickness = 2,
+            };
+
+            Line line2 = new Line
+            {
+                X1 = line_startX,
+                Y1 = line_startY,
+                X2 = line2x2,
+                Y2 = line2y2,
+                Stroke = new SolidColorBrush(Colors.White),
+                StrokeThickness = 2,
+            };
+            DrawingCanvas.Children.Add(line2);
+            DrawingCanvas.Children.Add(line1);
+            
+
+
 
 
         }
